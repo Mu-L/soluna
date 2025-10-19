@@ -22,25 +22,26 @@ function app.cleanup()
 	ltask.send(1, "quit_ltask")
 end
 
-local init_token
+--local init_token
 function app.frame(count)
-	local f
-	if init_token == nil then
-		init_token = {}
-		f = ltask.wait(init_token)
-	else
-		f = init_token
-	end
-	init_token = nil
-	f(count)
+--	local f
+--	if init_token == nil then
+--		init_token = {}
+--		f = ltask.wait(init_token)
+--	else
+--		f = init_token
+--	end
+--	init_token = nil
+--	f(count)
 end
 
 local function frame_callback(f)
-	if init_token then
-		ltask.wakeup(init_token, f)
-	else
-		init_token = f
-	end
+--	if init_token then
+--		ltask.wakeup(init_token, f)
+--	else
+--		init_token = f
+--	end
+	app.frame = f
 end
 
 local render_service
@@ -72,7 +73,7 @@ local cleanup = util.func_chain()
 
 local function skip_frame()
 	function app.frame()
-		ltask.mainthread_run(function() end)
+--		ltask.mainthread_run(function() end)
 	end
 end
 
@@ -173,6 +174,7 @@ local function init(arg)
 	
 	frame_callback(function ()
 		-- init render in the first frame, because render init would call some gfx api
+		app.frame = function() end
 		local ok, err = xpcall(init_render, debug.traceback)
 		if not ok then
 			print(err)
@@ -189,11 +191,11 @@ ltask.fork(function()
 	ltask.call(1, "external_forward", ltask.self(), "external")
 
 	-- trigger INIT_EVENT, see main.lua
-	ltask.mainthread_run(function() end)
+--	ltask.mainthread_run(function() end)
 	
 	local ok , err = pcall(init, args)
 	if not ok then
-		ltask.mainthread_run(function() end)
+--		ltask.mainthread_run(function() end)
 		ltask.log.error(err)
 		soluna_app.quit()
 	end

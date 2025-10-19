@@ -83,7 +83,7 @@ local function start(config)
 		mainthread = config.mainthread,
 	}
 	-- wait for INIT_EVENT, see start.lua
-	boot.mainthread_wait()
+--	boot.mainthread_wait()
 	local sender, sender_ud = bootstrap.external_sender(ctx)
 	local c_sendmessage = require "soluna.app".sendmessage
 	local function send_message(...)
@@ -131,7 +131,7 @@ local function start(config)
 				dispatch_appmsg(v)
 			end
 			send_message("frame", count)
-			boot.mainthread_wait()
+--			boot.mainthread_wait()
 		end,
 		event = function(ev)
 			send_message(unpackevent(ev))

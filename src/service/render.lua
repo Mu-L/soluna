@@ -185,15 +185,15 @@ end
 
 function S.frame(count)
 	batch.wait()
-	local ok , err = pcall(ltask.mainthread_run, frame, count)
-	if not ok then
-		print("RENDER ERR", err)
-	end
+--	local ok , err = pcall(ltask.mainthread_run, frame, count)
+--	if not ok then
+--		print("RENDER ERR", err)
+--	end
 	for i = 1, #batch do
 		local ptr, size, token = batch.consume(i)
 		ltask.wakeup(token)
 	end
-	assert(ok, err)
+--	assert(ok, err)
 end
 
 S.register_batch = assert(batch.register)
@@ -235,8 +235,6 @@ function S.load_sprites(name)
 end
 
 local function render_init(arg)
-	font.init()
-
 	local texture_size = setting.texture_size
 
 	local img = render.image {
@@ -380,7 +378,8 @@ local function render_init(arg)
 end
 
 function S.init(arg)
-	ltask.mainthread_run(render_init, arg)
+	font.init()
+--	ltask.mainthread_run(render_init, arg)
 end
 
 function S.resize(w, h)
